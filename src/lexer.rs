@@ -17,13 +17,28 @@ pub fn lex(source: &str) -> Option<Vec<Token>> {
             break;
         };
 
-        while let Some(nc) = chars.peek()
-            && (TokenKind::can_continue(&tok)
-                || (TokenKind::from_str(&tok).is_identifier() && nc.is_ascii_alphanumeric()))
-            && !TokenKind::from_str(&nc.to_string()).is_delimiter()
-            && !nc.is_whitespace()
-        {
-            tok.push(chars.next().unwrap());
+        while let Some(nc) = chars.peek() {
+            let current_kind = TokenKind::from_str(&tok);
+
+            if current_kind.is_identifier() {
+                if TokenKind::is_identifier_continue(*nc) {
+                    tok.push(chars.next().unwrap());
+                    continue;
+                } else {
+                    break;
+                }
+            }
+
+            if TokenKind::can_continue(&tok) && !nc.is_whitespace() && !nc.is_ascii_alphanumeric() {
+                tok.push(chars.next().unwrap());
+                continue;
+            }
+
+            if current_kind.is_delimiter() {
+                break;
+            }
+
+            break;
         }
 
         tokens.push(Token::new(tok));
