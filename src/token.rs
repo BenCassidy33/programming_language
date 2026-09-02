@@ -167,6 +167,8 @@ tokens!(
     (FALSE, "false", Keyword),
     (MUT, "mut", Keyword),
     (USE, "use", Keyword),
+    (INLINE, "inline", Keyword),
+    (MODULE, "module", Keyword),
     (COMPTIME, "comptime", Comptime),
     (DOLLAR, "$", Comptime),
 );
